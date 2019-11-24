@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.bean.ArtList;
 import com.example.demo.bean.artListBean;
@@ -38,17 +39,26 @@ public class otherController {
 
     }
 
+    /**
+     * 抓取api数据
+     *
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/artlist")
     public String doPostArtlist() throws Exception {
+        String artListStr;
         int mLimit = 1;
         while (true) {
             mLimit = (mLimit++) * 10;
-            String artListStr = HttpClient.doPost("http://47.75.251.38/index/Index/artlist?sort=time&typeid=1&limit=" + mLimit);
-            JSONObject jsonObject = JSONObject.parseObject(artListStr);
-            System.out.print(jsonObject.toJSONString());
-            ArtList artList1 = JSONObject.toJavaObject(jsonObject, ArtList.class);
+            artListStr = HttpClient.doPost("http://47.75.251.38/index/Index/artlist?sort=time&typeid=1&limit=" + mLimit);
+//            JSONObject jsonObject = JSONObject.parseObject(artListStr);
+            System.out.print(artListStr);
+//            ArtList artList1 = JSONObject.toJavaObject(jsonObject, ArtList.class);
+            ArtList artList1 = JSON.parseObject(artListStr, ArtList.class);
             if (artList1.getData().getData() == null) {
-                System.out.print("没有数据了");
+                return "数据抓取完成";
+//                System.out.print("没有数据了");
             } else {
                 for (int i = 0; i < artList1.getData().getData().size(); i++) {
                     Thread.sleep(300);
@@ -69,14 +79,13 @@ public class otherController {
                     artListBean.setTopid(String.valueOf(artList1.getData().getData().get(i).getTopid()));
                     artListBean.setTximg(String.valueOf(artList1.getData().getData().get(i).getTximg()));
                     artListBean.setUid(String.valueOf(artList1.getData().getData().get(i).getUid()));
-                    artListBean.setUid(String.valueOf(artList1.getData().getGuanggao().getUrl()));
+                    artListBean.setUrl(String.valueOf(artList1.getData().getGuanggao().getUrl()));
                     artListBean.setDeacripts(String.valueOf(artList1.getData().getGuanggao().getDeacript()));
                     //deacripts
                     iArtListService.addArtList(artListBean);
                 }
+//                return artListStr;
             }
-            return "";
         }
     }
-
 }

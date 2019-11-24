@@ -20,11 +20,10 @@ public class ArtListService implements IArtListService {
      */
     @Override
     public String addArtList(artListBean artListBean) {
-        artListBean artListBean1 = null;
         if (artListBean != null) {
-            artListBean1 = jpaArtListRepository.save(artListBean);
+            jpaArtListRepository.save(artListBean);
+
         }
-        System.out.print("artListBean1" + artListBean1.toString());
         return "数据保存成功";
     }
 }
