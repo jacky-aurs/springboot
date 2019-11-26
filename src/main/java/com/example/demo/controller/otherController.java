@@ -89,4 +89,10 @@ public class otherController {
 
         }
     }
+
+    @RequestMapping(value = "/getUrlapk")
+    public String getUrlApk() {
+
+        return "/";
+    }
 }
